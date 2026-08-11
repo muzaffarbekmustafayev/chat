@@ -8,11 +8,7 @@ import { SocketProvider } from './context/SocketContext'
 
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-
-const ChatPage = () => <div className="h-full flex flex-col items-center justify-center">
-  <div className="w-16 h-16 rounded-full border-4 border-tg-accent border-t-transparent animate-spin mb-4" />
-  <p className="text-lg font-medium text-tg-text-2">Asosiy oyna yuklanmoqda...</p>
-</div>
+import ChatPage from './pages/ChatPage'
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
