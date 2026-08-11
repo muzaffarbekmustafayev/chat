@@ -10,26 +10,18 @@ interface Props {
 
 const SearchBar: React.FC<Props> = ({ value, onChange, onClear }) => (
   <div className="px-3 py-2 flex-shrink-0">
-    <div className="
-      flex items-center gap-2.5 px-3 py-2 rounded-xl
-      bg-tg-500/60 border border-tg-glass-border
-      focus-within:border-tg-accent/50
-      focus-within:ring-2 focus-within:ring-tg-accent/10
-      focus-within:bg-tg-500
-      transition-all duration-200
-    ">
-      <HiMiniMagnifyingGlass size={16} className="text-tg-text-3 flex-shrink-0" />
+    <div className="tg-input-wrapper group">
+      <div className="pl-3 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+        <HiMiniMagnifyingGlass size={16} />
+      </div>
       <input
         value={value}
         onChange={onChange}
         placeholder="Qidiruv..."
-        className="
-          flex-1 bg-transparent outline-none
-          text-sm text-tg-text-1 placeholder:text-tg-text-4
-        "
+        className="flex-1 bg-transparent border-none rounded-2xl px-2 py-2 text-sm text-tg-text-1 placeholder:text-tg-text-4 outline-none"
       />
       {value && (
-        <button onClick={onClear} className="text-tg-text-3 hover:text-tg-text-1 transition-colors">
+        <button onClick={onClear} className="pr-3 text-tg-text-3 hover:text-tg-text-1 transition-colors">
           <IoClose size={16} />
         </button>
       )}
