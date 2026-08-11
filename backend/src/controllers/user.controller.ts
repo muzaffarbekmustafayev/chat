@@ -37,17 +37,19 @@ export const updateAvatar = catchAsync(async (req: Request, res: Response) => {
 
 // GET /api/users/search?q=ali
 export const searchUsers = catchAsync(async (req: Request, res: Response) => {
-  const q = (req.query.q as string || '').trim()
-  if (!q) return res.json({ success: true, data: [] })
-
-  const users = await User.find({
-    $or: [
+  const q = ((req.query.q || req.query.query) as string || '').trim()
+  
+  const query: any = { _id: { $ne: req.user._id } }
+  
+  if (q) {
+    query.$or = [
       { username: { $regex: q, $options: 'i' } },
       { firstName: { $regex: q, $options: 'i' } },
       { phone: q },
-    ],
-    _id: { $ne: req.user._id },
-  })
+    ]
+  }
+
+  const users = await User.find(query)
     .select('username firstName lastName avatar isOnline lastSeen')
     .limit(20)
 
