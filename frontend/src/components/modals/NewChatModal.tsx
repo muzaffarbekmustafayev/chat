@@ -93,10 +93,13 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-md bg-tg-700 border border-tg-glass-border rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tg-900/60 backdrop-blur-[8px] animate-fade-in">
+      <div className="w-full max-w-md glass-card overflow-hidden flex flex-col max-h-[85vh] shadow-2xl border border-white/10 relative">
+        {/* Subtle inner glow */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+        
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-tg-glass-border">
+        <div className="relative z-10 flex items-center justify-between px-6 py-5 border-b border-white/10">
           <h2 className="text-lg font-bold text-tg-text-1">Yangi suhbat</h2>
           <button onClick={onClose} className="text-tg-text-3 hover:text-tg-text-1 transition-colors">
             <IoClose size={22} />
@@ -104,58 +107,69 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-tg-glass-border p-1 bg-tg-800/40">
-          <button
-            onClick={() => setTab('private')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
-              tab === 'private' ? 'bg-tg-accent text-white shadow-tg-glow-sm' : 'text-tg-text-3 hover:text-tg-text-1'
-            }`}
-          >
-            <HiUser size={16} /> Shaxsiy chat
-          </button>
-          <button
-            onClick={() => setTab('group')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
-              tab === 'group' ? 'bg-tg-accent text-white shadow-tg-glow-sm' : 'text-tg-text-3 hover:text-tg-text-1'
-            }`}
-          >
-            <HiUserGroup size={16} /> Yangi Guruh
-          </button>
+        <div className="relative z-10 px-6 pt-5 pb-2">
+          <div className="flex bg-tg-900/50 p-1 rounded-2xl border border-white/5 backdrop-blur-md">
+            <button
+              onClick={() => setTab('private')}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all duration-300 ${
+                tab === 'private' ? 'bg-tg-600/80 text-tg-text-1 shadow-lg border border-white/10' : 'text-tg-text-3 hover:text-tg-text-1 hover:bg-white/5'
+              }`}
+            >
+              <HiUser size={16} /> Shaxsiy chat
+            </button>
+            <button
+              onClick={() => setTab('group')}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all duration-300 ${
+                tab === 'group' ? 'bg-tg-600/80 text-tg-text-1 shadow-lg border border-white/10' : 'text-tg-text-3 hover:text-tg-text-1 hover:bg-white/5'
+              }`}
+            >
+              <HiUserGroup size={16} /> Yangi Guruh
+            </button>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="p-4 flex-1 overflow-y-auto space-y-4">
+        <div className="p-6 pt-2 flex-1 overflow-y-auto space-y-5 relative z-10">
           {tab === 'group' && (
             <div>
-              <label className="block text-xs font-semibold text-tg-text-2 mb-1">Guruh nomi</label>
-              <input
-                type="text"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-                placeholder="Masalan: Dasturchilar guruhi"
-                className="tg-input py-2.5"
-              />
+              <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Guruh nomi</label>
+              <div className="tg-input-wrapper group">
+                <input
+                  type="text"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  placeholder="Masalan: Dasturchilar guruhi"
+                  className="tg-input py-3"
+                />
+              </div>
             </div>
           )}
 
           {/* Qidiruv input */}
-          <div className="relative">
-            <HiMiniMagnifyingGlass size={18} className="absolute left-3.5 top-3 text-tg-text-3" />
+          <div className="tg-input-wrapper group">
+            <div className="pl-4 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+              <HiMiniMagnifyingGlass size={18} />
+            </div>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Foydalanuvchi qidirish (ism yoki username)..."
-              className="tg-input pl-10 py-2.5"
+              placeholder="Ism yoki username orqali izlash..."
+              className="tg-input pl-3 py-3"
             />
           </div>
 
           {/* User List */}
-          <div className="space-y-1.5 max-h-60 overflow-y-auto scrollbar-none">
+          <div className="space-y-2 max-h-60 overflow-y-auto scrollbar-none pr-1">
             {loading ? (
-              <div className="text-center py-6 text-tg-text-3 text-sm">Qidirilmoqda...</div>
+              <div className="text-center py-8 text-tg-text-3 text-sm flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-tg-accent/30 border-t-tg-accent rounded-full animate-spin" />
+                Qidirilmoqda...
+              </div>
             ) : users.length === 0 ? (
-              <div className="text-center py-6 text-tg-text-3 text-sm">Foydalanuvchilar topilmadi</div>
+              <div className="text-center py-8 text-tg-text-3 text-sm bg-white/5 rounded-2xl border border-white/5">
+                Foydalanuvchilar topilmadi
+              </div>
             ) : (
               users.map((u) => {
                 const isSelected = selectedUserIds.includes(u._id)
@@ -163,11 +177,11 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   <div
                     key={u._id}
                     onClick={() => tab === 'private' ? handleStartPrivateChat(u._id) : toggleSelectUser(u._id)}
-                    className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-colors ${
-                      isSelected ? 'bg-tg-accent/20 border border-tg-accent/40' : 'hover:bg-tg-600/50'
+                    className={`flex items-center gap-4 p-3 rounded-2xl cursor-pointer transition-all duration-200 border ${
+                      isSelected ? 'bg-tg-accent/10 border-tg-accent/40 shadow-tg-glow-sm' : 'border-transparent hover:bg-white/5 hover:border-white/10'
                     }`}
                   >
-                    <div className="avatar-wrapper flex-shrink-0">
+                    <div className="avatar-wrapper flex-shrink-0 relative">
                       {u.avatar ? (
                         <img src={u.avatar} className="avatar-base avatar-md" alt="" />
                       ) : (
@@ -197,15 +211,16 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         {/* Footer for Group */}
         {tab === 'group' && (
-          <div className="p-4 border-t border-tg-glass-border bg-tg-800/30 flex justify-end gap-2">
-            <button onClick={onClose} className="px-4 py-2 text-xs font-semibold text-tg-text-3 hover:text-tg-text-1">
+          <div className="p-5 border-t border-white/10 bg-tg-800/40 backdrop-blur-md flex justify-end gap-3 relative z-10">
+            <button onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-tg-text-3 hover:text-tg-text-1 transition-colors">
               Bekor qilish
             </button>
             <button
               onClick={handleCreateGroup}
-              disabled={creatingGroup}
-              className="btn-primary py-2 text-xs"
+              disabled={creatingGroup || selectedUserIds.length === 0}
+              className="btn-primary py-2.5 text-sm flex items-center gap-2"
             >
+              {creatingGroup && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
               {creatingGroup ? "Yaratilmoqda..." : `Guruh yaratish (${selectedUserIds.length})`}
             </button>
           </div>
