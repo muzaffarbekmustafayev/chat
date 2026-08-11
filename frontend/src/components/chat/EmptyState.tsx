@@ -1,5 +1,5 @@
 import React from 'react'
-import { IoChatbubbleEllipsesOutline } from 'react-icons/io5'
+import { FaTelegramPlane } from 'react-icons/fa'
 import { HiMiniPencilSquare } from 'react-icons/hi2'
 
 const EmptyState: React.FC = () => (
@@ -17,13 +17,12 @@ const EmptyState: React.FC = () => (
       <div className="relative">
         <div className="
           w-24 h-24 rounded-full flex items-center justify-center
-          bg-tg-accent-muted border border-tg-accent/20
-          shadow-tg-glow animate-glow
+          bg-accent-gradient shadow-tg-glow animate-glow
         ">
-          <IoChatbubbleEllipsesOutline size={48} className="text-tg-accent" />
+          <FaTelegramPlane size={48} className="text-white drop-shadow ml-[-2px] mt-[2px]" />
         </div>
-        <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-tg-accent/30 animate-float" style={{ animationDelay: "0s" }} />
-        <div className="absolute -bottom-1 -left-1 w-3 h-3 rounded-full bg-tg-accent/20 animate-float" style={{ animationDelay: "0.5s" }} />
+        <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-tg-accent/60 animate-float" style={{ animationDelay: "0s" }} />
+        <div className="absolute -bottom-1 -left-1 w-3 h-3 rounded-full bg-tg-accent/40 animate-float" style={{ animationDelay: "0.5s" }} />
       </div>
 
       <div className="text-center">
