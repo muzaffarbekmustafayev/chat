@@ -52,7 +52,7 @@ const ChatWindow: React.FC<Props> = ({ onBack }) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col relative transition-all duration-300 bg-tg-800 overflow-hidden">
+    <div className="flex-1 flex flex-col relative transition-all duration-300 bg-transparent overflow-hidden">
       {/* Background Pattern */}
       <div 
         className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none" 
@@ -60,7 +60,7 @@ const ChatWindow: React.FC<Props> = ({ onBack }) => {
       />
       
       {/* Gradient Overlay for extra premium feel */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-tg-900/40 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-tg-900/40 to-tg-900/10 pointer-events-none" />
 
       <div className="flex-1 flex flex-col z-10 relative">
         <ChatHeader chat={activeChat} onBack={onBack} />
