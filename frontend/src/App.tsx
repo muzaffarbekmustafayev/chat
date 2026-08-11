@@ -6,10 +6,13 @@ import { RootState, AppDispatch } from './store'
 import { fetchMe } from './store/authSlice'
 import { SocketProvider } from './context/SocketContext'
 
-// Sahifalar (vaqtincha oddiy komponentlar kiritamiz)
-const ChatPage = () => <div className="h-full flex items-center justify-center text-2xl font-bold">💬 Chat Sahifasi Tayyorlanmoqda...</div>
-const LoginPage = () => <div className="h-full flex items-center justify-center text-2xl font-bold">🔑 Login Tayyorlanmoqda...</div>
-const RegisterPage = () => <div className="h-full flex items-center justify-center text-2xl font-bold">📝 Register Tayyorlanmoqda...</div>
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+
+const ChatPage = () => <div className="h-full flex flex-col items-center justify-center">
+  <div className="w-16 h-16 rounded-full border-4 border-tg-accent border-t-transparent animate-spin mb-4" />
+  <p className="text-lg font-medium text-tg-text-2">Asosiy oyna yuklanmoqda...</p>
+</div>
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -24,7 +27,7 @@ const App: React.FC = () => {
   if (loading) return <div className="h-full flex items-center justify-center">Yuklanmoqda...</div>
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <SocketProvider>
         <Toaster position="top-center" toastOptions={{ className: 'bg-tg-500 text-tg-text-1 border border-tg-glass-border' }} />
         <Routes>
