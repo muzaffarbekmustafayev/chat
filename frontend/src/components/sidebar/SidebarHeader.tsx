@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { HiMiniPencilSquare } from 'react-icons/hi2'
 import { BsThreeDotsVertical, BsSunFill, BsMoonFill } from 'react-icons/bs'
+import { IoLogOutOutline } from 'react-icons/io5'
 import { User } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../store/authSlice'
@@ -59,7 +60,7 @@ const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
             <HiMiniPencilSquare size={18} />
           </button>
           <button onClick={() => dispatch(logout())} className="btn-icon-circle text-red-400 hover:text-red-300 hover:bg-red-500/10" title="Chiqish">
-            <BsThreeDotsVertical size={16} />
+            <IoLogOutOutline size={18} className="ml-1" />
           </button>
         </div>
       </div>
