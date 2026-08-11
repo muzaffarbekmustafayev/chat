@@ -6,12 +6,14 @@ interface ChatState {
   chats: Chat[]
   activeChat: Chat | null
   loading: boolean
+  isNewChatModalOpen: boolean
 }
 
 const initialState: ChatState = {
   chats: [],
   activeChat: null,
   loading: false,
+  isNewChatModalOpen: false
 }
 
 export const fetchChats = createAsyncThunk('chat/fetchChats', async () => {
@@ -25,6 +27,9 @@ const chatSlice = createSlice({
   reducers: {
     setActiveChat: (state, action: PayloadAction<Chat | null>) => {
       state.activeChat = action.payload
+    },
+    setNewChatModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isNewChatModalOpen = action.payload
     },
     updateChat: (state, action: PayloadAction<Partial<Chat> & { _id: string }>) => {
       const idx = state.chats.findIndex((c) => c._id === action.payload._id)
@@ -52,5 +57,5 @@ const chatSlice = createSlice({
   },
 })
 
-export const { setActiveChat, updateChat, newChatPrepend } = chatSlice.actions
+export const { setActiveChat, setNewChatModalOpen, updateChat, newChatPrepend } = chatSlice.actions
 export default chatSlice.reducer

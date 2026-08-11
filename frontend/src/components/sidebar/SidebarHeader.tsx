@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { HiMiniPencilSquare } from 'react-icons/hi2'
-import { BsThreeDotsVertical, BsSunFill, BsMoonFill } from 'react-icons/bs'
+import { BsSunFill, BsMoonFill } from 'react-icons/bs'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { User } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../store/authSlice'
 import { toggleTheme } from '../../store/themeSlice'
+import { setNewChatModalOpen } from '../../store/chatSlice'
 import { RootState } from '../../store'
 import NewChatModal from '../modals/NewChatModal'
 import ProfileModal from '../modals/ProfileModal'
@@ -13,7 +14,7 @@ import ProfileModal from '../modals/ProfileModal'
 const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
   const dispatch = useDispatch()
   const { mode } = useSelector((state: RootState) => state.theme)
-  const [isNewChatOpen, setIsNewChatOpen] = useState(false)
+  const { isNewChatModalOpen } = useSelector((state: RootState) => state.chat)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
 
   if (!user) return null
@@ -56,7 +57,7 @@ const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
           >
             {mode === 'dark' ? <BsSunFill size={16} /> : <BsMoonFill size={16} />}
           </button>
-          <button onClick={() => setIsNewChatOpen(true)} className="btn-icon-circle" title="Yangi suhbat">
+          <button onClick={() => dispatch(setNewChatModalOpen(true))} className="btn-icon-circle" title="Yangi suhbat">
             <HiMiniPencilSquare size={18} />
           </button>
           <button onClick={() => dispatch(logout())} className="btn-icon-circle text-red-400 hover:text-red-300 hover:bg-red-500/10" title="Chiqish">
@@ -65,7 +66,7 @@ const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
         </div>
       </div>
 
-      <NewChatModal isOpen={isNewChatOpen} onClose={() => setIsNewChatOpen(false)} />
+      <NewChatModal isOpen={isNewChatModalOpen} onClose={() => dispatch(setNewChatModalOpen(false))} />
       <ProfileModal user={user} isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </>
   )

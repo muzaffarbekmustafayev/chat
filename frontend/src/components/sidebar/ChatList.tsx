@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../store'
 import { setActiveChat } from '../../store/chatSlice'
 
+import { setNewChatModalOpen } from '../../store/chatSlice'
+
 interface Props {
   chats: Chat[]
   loading: boolean
@@ -38,10 +40,15 @@ const ChatList: React.FC<Props> = ({ chats, loading, currentUser, onSelect }) =>
   if (chats.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <div className="bg-tg-600/30 border border-white/5 px-4 py-1.5 rounded-full mb-3 shadow-inner">
+        <div className="bg-tg-600/30 border border-white/5 px-4 py-1.5 rounded-full mb-4 shadow-inner">
           <span className="text-sm font-medium text-tg-text-3">Suhbatlar topilmadi</span>
         </div>
-        <p className="text-xs text-tg-text-4">Yangi chat ochish uchun qalamchani bosing</p>
+        <button 
+          onClick={() => dispatch(setNewChatModalOpen(true))}
+          className="btn-primary w-full max-w-[200px]"
+        >
+          Yangi suhbat
+        </button>
       </div>
     )
   }

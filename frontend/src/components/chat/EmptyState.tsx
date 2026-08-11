@@ -1,8 +1,13 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { FaTelegramPlane } from 'react-icons/fa'
 import { HiMiniPencilSquare } from 'react-icons/hi2'
+import { setNewChatModalOpen } from '../../store/chatSlice'
 
-const EmptyState: React.FC = () => (
+const EmptyState: React.FC = () => {
+  const dispatch = useDispatch()
+  
+  return (
   <div className="flex-1 hidden md:flex flex-col items-center justify-center gap-5 p-8 bg-transparent relative overflow-hidden">
     {/* Background Pattern */}
     <div 
@@ -29,12 +34,20 @@ const EmptyState: React.FC = () => (
         <h2 className="text-lg font-bold text-tg-text-1 mb-1.5">
           Suhbat tanlang
         </h2>
-        <p className="text-sm text-tg-text-2 max-w-[240px] leading-relaxed mx-auto">
+        <p className="text-sm text-tg-text-2 max-w-[240px] leading-relaxed mx-auto mb-6">
           Chap paneldan chatni tanlang yoki yangi suhbat boshlang
         </p>
+        <button 
+          onClick={() => dispatch(setNewChatModalOpen(true))}
+          className="btn-primary shadow-tg-glow mx-auto flex items-center gap-2"
+        >
+          <HiMiniPencilSquare size={18} />
+          <span>Yangi suhbat</span>
+        </button>
       </div>
     </div>
   </div>
-)
+  )
+}
 
 export default EmptyState
