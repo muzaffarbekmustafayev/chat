@@ -13,14 +13,16 @@ const MessageList: React.FC<Props> = ({ chat }) => {
   const { user } = useSelector((state: RootState) => state.auth)
   const messages = messagesByChat[chat._id] || []
   
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
+    }
   }, [messages])
 
   return (
-    <div className="flex-1 overflow-y-auto px-2 md:px-4 py-4 space-y-1">
+    <div ref={containerRef} className="flex-1 overflow-y-auto px-2 md:px-4 py-4 space-y-1">
       {messages.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center">
           <div className="bg-tg-600/50 px-4 py-2 rounded-xl text-sm text-tg-text-2">
@@ -37,7 +39,6 @@ const MessageList: React.FC<Props> = ({ chat }) => {
           />
         ))
       )}
-      <div ref={bottomRef} />
     </div>
   )
 }
