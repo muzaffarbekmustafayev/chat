@@ -49,16 +49,38 @@ export const createPrivateChat = catchAsync(async (req: Request, res: Response) 
 
 // POST /api/chats/group
 export const createGroupChat = catchAsync(async (req: Request, res: Response) => {
-  const { name, participants } = req.body
+  const { name, participantIds } = req.body
   if (!name) throw new AppError("Guruh nomi talab qilinadi", 400)
-  if (!Array.isArray(participants) || participants.length < 2)
-    throw new AppError("Kamida 2 ta a'zo kerak", 400)
+  if (!Array.isArray(participantIds) || participantIds.length < 1)
+    throw new AppError("Kamida 1 ta a'zo kerak", 400)
 
-  const allParticipants = [...new Set([req.user._id.toString(), ...participants])]
+  const allParticipants = [...new Set([req.user._id.toString(), ...participantIds])]
 
   const chat = await Chat.create({
     type: 'group',
     name,
+    participants: allParticipants,
+    admins: [req.user._id],
+    owner: req.user._id,
+  })
+
+  const populated = await chat.populate('participants', 'username firstName lastName avatar isOnline lastSeen')
+  res.status(201).json({ success: true, data: populated })
+})
+
+// POST /api/chats/channel
+export const createChannelChat = catchAsync(async (req: Request, res: Response) => {
+  const { name, description, participantIds, isPublic } = req.body
+  if (!name) throw new AppError("Kanal nomi talab qilinadi", 400)
+  
+  // For channels, adding initial participants is optional
+  const allParticipants = [...new Set([req.user._id.toString(), ...(Array.isArray(participantIds) ? participantIds : [])])]
+
+  const chat = await Chat.create({
+    type: 'channel',
+    name,
+    description: description || '',
+    isPublic: !!isPublic,
     participants: allParticipants,
     admins: [req.user._id],
     owner: req.user._id,

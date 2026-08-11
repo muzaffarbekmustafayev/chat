@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { IoClose } from 'react-icons/io5'
-import { HiMiniMagnifyingGlass, HiUserGroup, HiUser } from 'react-icons/hi2'
+import { HiMiniMagnifyingGlass, HiUserGroup, HiUser, HiSpeakerphone } from 'react-icons/hi2'
 import toast from 'react-hot-toast'
 import { api } from '../../api/axios'
 import { User, Chat } from '../../types'
@@ -14,7 +14,7 @@ interface Props {
 
 const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const dispatch = useDispatch()
-  const [tab, setTab] = useState<'private' | 'group'>('private')
+  const [tab, setTab] = useState<'private' | 'group' | 'channel'>('private')
   const [search, setSearch] = useState('')
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
@@ -23,6 +23,12 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [groupName, setGroupName] = useState('')
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
   const [creatingGroup, setCreatingGroup] = useState(false)
+
+  // Channel tab states
+  const [channelName, setChannelName] = useState('')
+  const [channelDescription, setChannelDescription] = useState('')
+  const [isPublicChannel, setIsPublicChannel] = useState(true)
+  const [creatingChannel, setCreatingChannel] = useState(false)
 
   useEffect(() => {
     if (!isOpen) return
@@ -86,6 +92,32 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   }
 
+  const handleCreateChannel = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!channelName.trim()) return toast.error("Kanal nomini kiriting")
+
+    try {
+      setCreatingChannel(true)
+      const res = await api.post('/chats/channel', {
+        name: channelName.trim(),
+        description: channelDescription.trim(),
+        isPublic: isPublicChannel,
+        participantIds: selectedUserIds // Optional for channels
+      })
+      if (res.data.success) {
+        const chat: Chat = res.data.data
+        dispatch(newChatPrepend(chat))
+        dispatch(setActiveChat(chat))
+        toast.success("Kanal yaratildi")
+        onClose()
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.error?.message || "Kanal yaratishda xatolik")
+    } finally {
+      setCreatingChannel(false)
+    }
+  }
+
   const toggleSelectUser = (id: string) => {
     setSelectedUserIds(prev =>
       prev.includes(id) ? prev.filter(uId => uId !== id) : [...prev, id]
@@ -119,11 +151,19 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </button>
             <button
               onClick={() => setTab('group')}
-              className={`flex-1 py-2.5 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all duration-300 ${
+              className={`flex-1 py-2.5 text-[11px] font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 ${
                 tab === 'group' ? 'bg-tg-600/80 text-tg-text-1 shadow-lg border border-white/10' : 'text-tg-text-3 hover:text-tg-text-1 hover:bg-white/5'
               }`}
             >
-              <HiUserGroup size={16} /> Yangi Guruh
+              <HiUserGroup size={15} /> Guruh
+            </button>
+            <button
+              onClick={() => setTab('channel')}
+              className={`flex-1 py-2.5 text-[11px] font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 ${
+                tab === 'channel' ? 'bg-tg-600/80 text-tg-text-1 shadow-lg border border-white/10' : 'text-tg-text-3 hover:text-tg-text-1 hover:bg-white/5'
+              }`}
+            >
+              <HiSpeakerphone size={15} /> Kanal
             </button>
           </div>
         </div>
@@ -141,6 +181,57 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   placeholder="Masalan: Dasturchilar guruhi"
                   className="tg-input py-3"
                 />
+              </div>
+            </div>
+          )}
+
+          {tab === 'channel' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Kanal nomi</label>
+                <div className="tg-input-wrapper group">
+                  <input
+                    type="text"
+                    value={channelName}
+                    onChange={(e) => setChannelName(e.target.value)}
+                    placeholder="Masalan: Yangiliklar"
+                    className="tg-input py-3"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between px-1">
+                <div>
+                  <p className="text-sm font-semibold text-tg-text-1">Kanal turi</p>
+                  <p className="text-xs text-tg-text-3 mt-0.5">
+                    {isPublicChannel ? "Kanalni barcha qidirib topa oladi" : "Faqat taklif orqali qo'shilish mumkin"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsPublicChannel(!isPublicChannel)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    isPublicChannel ? 'bg-tg-accent' : 'bg-tg-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      isPublicChannel ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Kanal haqida (ixtiyoriy)</label>
+                <div className="tg-input-wrapper group h-auto">
+                  <textarea
+                    value={channelDescription}
+                    onChange={(e) => setChannelDescription(e.target.value)}
+                    placeholder="Kanal qanday mavzuda..."
+                    className="tg-input py-3 min-h-[60px] resize-none"
+                    rows={2}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -194,7 +285,7 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       <p className="text-sm font-semibold text-tg-text-1 truncate">{u.firstName} {u.lastName}</p>
                       <p className="text-xs text-tg-text-3 truncate">@{u.username}</p>
                     </div>
-                    {tab === 'group' && (
+                    {tab !== 'private' && (
                       <input
                         type="checkbox"
                         checked={isSelected}
@@ -209,19 +300,19 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Footer for Group */}
-        {tab === 'group' && (
+        {/* Footer for Group/Channel */}
+        {tab !== 'private' && (
           <div className="p-5 border-t border-white/10 bg-tg-800/40 backdrop-blur-md flex justify-end gap-3 relative z-10">
             <button onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-tg-text-3 hover:text-tg-text-1 transition-colors">
               Bekor qilish
             </button>
             <button
-              onClick={handleCreateGroup}
-              disabled={creatingGroup || selectedUserIds.length === 0}
+              onClick={tab === 'group' ? handleCreateGroup : handleCreateChannel}
+              disabled={tab === 'group' ? (creatingGroup || selectedUserIds.length === 0) : creatingChannel}
               className="btn-primary py-2.5 text-sm flex items-center gap-2"
             >
-              {creatingGroup && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-              {creatingGroup ? "Yaratilmoqda..." : `Guruh yaratish (${selectedUserIds.length})`}
+              {(creatingGroup || creatingChannel) && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              {creatingGroup ? "Yaratilmoqda..." : creatingChannel ? "Yaratilmoqda..." : tab === 'group' ? `Guruh yaratish (${selectedUserIds.length})` : `Kanal yaratish ${selectedUserIds.length > 0 ? `(${selectedUserIds.length})` : ''}`}
             </button>
           </div>
         )}
