@@ -39,7 +39,16 @@ const ChatItem: React.FC<Props> = ({ chat, isActive, onClick, currentUser }) => 
   const isOnline = chat.type === 'private' ? otherUser?.isOnline : false
 
   return (
-    <div onClick={onClick} className={`chat-item ${isActive ? "chat-item-active" : ""}`}>
+    <div 
+      onClick={onClick} 
+      className={`
+        flex items-center gap-3 px-3 py-2.5 mx-2 my-1 rounded-2xl cursor-pointer transition-all duration-200
+        border border-transparent
+        ${isActive 
+          ? 'bg-tg-accent/10 border-tg-accent/20 shadow-tg-glow-sm' 
+          : 'hover:bg-tg-600/30 hover:border-white/5'}
+      `}
+    >
       {/* Avatar */}
       <div className="avatar-wrapper flex-shrink-0">
         {chatAvatar ? (
