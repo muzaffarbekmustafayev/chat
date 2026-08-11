@@ -14,6 +14,11 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const { loading: authLoading } = useSelector((state: RootState) => state.auth)
 
+  const [phone, setPhone] = useState('+998')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+
   const formatPhone = (val: string) => {
     const digits = val.replace(/\D/g, '')
     let body = digits.startsWith('998') ? digits.slice(3) : digits
