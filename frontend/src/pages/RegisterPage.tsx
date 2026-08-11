@@ -142,7 +142,7 @@ const RegisterPage = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="alivaliyev"
+                placeholder="@alivaliyev"
                 className="tg-input py-2.5 pl-2.5"
                 disabled={loading}
               />

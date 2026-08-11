@@ -16,10 +16,13 @@ const COOKIE_OPTS = {
 export const register = catchAsync(async (req: Request, res: Response) => {
   const { username, phone, password, firstName, lastName } = req.body
 
-  const exists = await User.findOne({ $or: [{ username }, { phone }] })
+  // Ensure username doesn't contain '@' prefix in the database
+  const cleanUsername = username?.startsWith('@') ? username.substring(1) : username
+
+  const exists = await User.findOne({ $or: [{ username: cleanUsername }, { phone }] })
   if (exists) throw new AppError("Username yoki telefon band", 409, 'DUPLICATE_KEY')
 
-  const user = await User.create({ username, phone, password, firstName, lastName: lastName || '' })
+  const user = await User.create({ username: cleanUsername, phone, password, firstName, lastName: lastName || '' })
   const tokens = generateTokens(user._id.toString())
 
   await User.findByIdAndUpdate(user._id, { $push: { refreshTokens: tokens.refreshToken } })

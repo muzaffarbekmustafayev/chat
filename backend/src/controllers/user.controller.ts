@@ -42,11 +42,17 @@ export const searchUsers = catchAsync(async (req: Request, res: Response) => {
   const query: any = { _id: { $ne: req.user._id } }
   
   if (q) {
-    query.$or = [
-      { username: { $regex: q, $options: 'i' } },
-      { firstName: { $regex: q, $options: 'i' } },
-      { phone: q },
-    ]
+    if (q.startsWith('@')) {
+      // Strictly search by username if it starts with @
+      const cleanQ = q.substring(1)
+      query.username = { $regex: cleanQ, $options: 'i' }
+    } else {
+      query.$or = [
+        { username: { $regex: q, $options: 'i' } },
+        { firstName: { $regex: q, $options: 'i' } },
+        { phone: q },
+      ]
+    }
   }
 
   const users = await User.find(query)
