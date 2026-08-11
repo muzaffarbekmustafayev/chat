@@ -70,7 +70,7 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const handleStartPrivateChat = async (userId: string) => {
     try {
-      const res = await api.post('/chats/private', { recipientId: userId })
+      const res = await api.post('/chats/private', { userId })
       if (res.data.success) {
         const chat: Chat = res.data.data
         dispatch(newChatPrepend(chat))
