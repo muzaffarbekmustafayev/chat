@@ -69,7 +69,7 @@ const LoginPage = () => {
       <div className="w-full max-w-md glass-card p-8 sm:p-10 relative z-10 animate-fade-in border border-white/10 shadow-2xl">
         {/* Logo qismi */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4 transform hover:scale-105 transition-transform duration-300">
+          <div className="w-16 h-16 rounded-full bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4 transition-transform duration-300">
             <FaTelegramPlane size={38} className="text-white drop-shadow ml-[-2px] mt-[2px]" />
           </div>
           <h1 className="text-2xl font-extrabold text-tg-text-1 tracking-tight mb-1">Telegram Clone</h1>
