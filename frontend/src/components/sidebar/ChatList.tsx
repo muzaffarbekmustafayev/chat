@@ -1,9 +1,9 @@
 import React from 'react'
-import { Chat, User } from '../../../types'
+import { Chat, User } from '../../types'
 import ChatItem from './ChatItem'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../../../store'
-import { setActiveChat } from '../../../store/chatSlice'
+import { AppDispatch, RootState } from '../../store'
+import { setActiveChat } from '../../store/chatSlice'
 
 interface Props {
   chats: Chat[]

@@ -5,9 +5,9 @@ import { HiPhoto } from 'react-icons/hi2'
 import { BsMicFill } from 'react-icons/bs'
 import { AiOutlineFilePdf } from 'react-icons/ai'
 import { format } from 'date-fns'
-import { Chat, User, Message } from '../../../types'
-import { RootState, AppDispatch } from '../../../store'
-import { setActiveChat } from '../../../store/chatSlice'
+import { Chat, User, Message } from '../../types'
+import { RootState, AppDispatch } from '../../store'
+import { setActiveChat } from '../../store/chatSlice'
 
 interface Props {
   chat: Chat

@@ -1,9 +1,9 @@
 import React from 'react'
 import { HiMiniPencilSquare, HiMiniMagnifyingGlass } from 'react-icons/hi2'
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { User } from '../../../types'
+import { User } from '../../types'
 import { useDispatch } from 'react-redux'
-import { logout } from '../../../store/authSlice'
+import { logout } from '../../store/authSlice'
 
 const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
   const dispatch = useDispatch()
