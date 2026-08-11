@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { IoClose } from 'react-icons/io5'
-import { HiMiniMagnifyingGlass, HiUserGroup, HiUser, HiSpeakerphone } from 'react-icons/hi2'
+import { HiMiniMagnifyingGlass, HiUserGroup, HiUser } from 'react-icons/hi2'
+import { HiSpeakerphone } from 'react-icons/hi'
 import toast from 'react-hot-toast'
 import { api } from '../../api/axios'
 import { User, Chat } from '../../types'
