@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { IoChatbubbleEllipsesOutline } from 'react-icons/io5'
+import { FaTelegramPlane } from 'react-icons/fa'
 import { HiArrowRight } from 'react-icons/hi2'
 import { BsPersonFill, BsAt, BsTelephoneFill, BsLockFill, BsEyeFill, BsEyeSlashFill } from 'react-icons/bs'
 import toast from 'react-hot-toast'
@@ -83,8 +83,8 @@ const RegisterPage = () => {
 
       <div className="w-full max-w-md glass-card p-6 sm:p-8 relative z-10 animate-fade-in border border-white/10 shadow-2xl my-auto">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-3">
-            <IoChatbubbleEllipsesOutline size={30} className="text-white drop-shadow" />
+          <div className="w-14 h-14 rounded-full bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-3 transform hover:scale-105 transition-transform duration-300">
+            <FaTelegramPlane size={32} className="text-white drop-shadow ml-[-2px] mt-[2px]" />
           </div>
           <h1 className="text-xl font-extrabold text-tg-text-1 tracking-tight mb-1">Ro'yxatdan o'tish</h1>
           <p className="text-xs text-tg-text-3 font-medium">Yangi hisob yaratish uchun formani to'ldiring</p>

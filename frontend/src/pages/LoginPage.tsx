@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { IoChatbubbleEllipsesOutline } from 'react-icons/io5'
+import { FaTelegramPlane } from 'react-icons/fa'
 import { HiArrowRight } from 'react-icons/hi2'
 import { BsTelephoneFill, BsLockFill, BsEyeFill, BsEyeSlashFill } from 'react-icons/bs'
 import toast from 'react-hot-toast'
@@ -69,8 +69,8 @@ const LoginPage = () => {
       <div className="w-full max-w-md glass-card p-8 sm:p-10 relative z-10 animate-fade-in border border-white/10 shadow-2xl">
         {/* Logo qismi */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4 transform hover:scale-105 transition-transform duration-300">
-            <IoChatbubbleEllipsesOutline size={36} className="text-white drop-shadow" />
+          <div className="w-16 h-16 rounded-full bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4 transform hover:scale-105 transition-transform duration-300">
+            <FaTelegramPlane size={38} className="text-white drop-shadow ml-[-2px] mt-[2px]" />
           </div>
           <h1 className="text-2xl font-extrabold text-tg-text-1 tracking-tight mb-1">Telegram Clone</h1>
           <p className="text-xs text-tg-text-3 font-medium">Hisobingizga kirish uchun ma'lumotlarni kiriting</p>
