@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5'
 import { HiArrowRight } from 'react-icons/hi2'
+import { BsTelephoneFill, BsLockFill, BsEyeFill, BsEyeSlashFill } from 'react-icons/bs'
 import toast from 'react-hot-toast'
 import { api } from '../api/axios'
 import { setAuth } from '../store/authSlice'
@@ -15,6 +16,7 @@ const LoginPage = () => {
 
   const [phone, setPhone] = useState('+998')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -41,54 +43,73 @@ const LoginPage = () => {
   if (authLoading) return null
 
   return (
-    <div className="h-full w-full flex items-center justify-center p-4">
-      {/* Orqa fon bezaklari */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-tg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-tg-accent-light/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="h-full w-full flex items-center justify-center p-4 relative overflow-hidden bg-tg-900">
+      {/* Orqa fon bezaklari - Gradient Blobs */}
+      <div className="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-tg-accent/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/3 w-[450px] h-[450px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-md glass-card p-8 relative z-10 animate-modal">
+      <div className="w-full max-w-md glass-card p-8 sm:p-10 relative z-10 animate-fade-in border border-white/10 shadow-2xl">
         {/* Logo qismi */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4">
-            <IoChatbubbleEllipsesOutline size={36} className="text-white" />
+          <div className="w-16 h-16 rounded-2xl bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-4 transform hover:scale-105 transition-transform duration-300">
+            <IoChatbubbleEllipsesOutline size={36} className="text-white drop-shadow" />
           </div>
-          <h1 className="text-2xl font-bold text-tg-text-1 mb-1">Telegram Clone</h1>
-          <p className="text-sm text-tg-text-3">Hisobingizga kiring</p>
+          <h1 className="text-2xl font-extrabold text-tg-text-1 tracking-tight mb-1">Telegram Clone</h1>
+          <p className="text-xs text-tg-text-3 font-medium">Hisobingizga kirish uchun ma'lumotlarni kiriting</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-5">
+          {/* Telefon Input */}
           <div>
-            <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
+            <label className="block text-xs font-semibold text-tg-text-2 mb-2 ml-1">
               Telefon raqam
             </label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+998 90 123 45 67"
-              className="tg-input"
-              disabled={loading}
-            />
+            <div className="tg-input-wrapper group">
+              <div className="pl-4 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                <BsTelephoneFill size={16} />
+              </div>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+998 90 123 45 67"
+                className="tg-input"
+                disabled={loading}
+              />
+            </div>
           </div>
 
+          {/* Parol Input */}
           <div>
-            <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
+            <label className="block text-xs font-semibold text-tg-text-2 mb-2 ml-1">
               Parol
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="tg-input"
-              disabled={loading}
-            />
+            <div className="tg-input-wrapper group">
+              <div className="pl-4 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                <BsLockFill size={17} />
+              </div>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="tg-input pr-10"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 text-tg-text-3 hover:text-tg-text-1 transition-colors"
+              >
+                {showPassword ? <BsEyeSlashFill size={18} /> : <BsEyeFill size={18} />}
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary flex items-center justify-center gap-2 mt-2"
+            className="w-full btn-primary py-3.5 mt-4 flex items-center justify-center gap-2 text-sm font-semibold rounded-2xl shadow-tg-glow hover:shadow-tg-glow-sm transition-all duration-200"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -100,10 +121,10 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-tg-text-3">
+        <div className="mt-8 text-center pt-4 border-t border-white/5">
+          <p className="text-xs text-tg-text-3">
             Hisobingiz yo'qmi?{' '}
-            <Link to="/register" className="text-tg-accent hover:text-tg-accent-light font-medium transition-colors">
+            <Link to="/register" className="text-tg-accent hover:text-tg-accent-light font-semibold transition-colors">
               Ro'yxatdan o'tish
             </Link>
           </p>

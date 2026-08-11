@@ -73,7 +73,16 @@
         .btn-icon-circle { @apply w-10 h-10 flex items-center justify-center rounded-full text-tg-text-2 hover:text-tg-text-1 hover:bg-tg-300/60 transition-all duration-150 active:scale-90 flex-shrink-0; }
         .btn-icon-accent { @apply w-10 h-10 flex items-center justify-center rounded-full bg-accent-gradient text-white shadow-tg-glow-sm hover:shadow-tg-glow hover:scale-[1.05] active:scale-95 transition-all duration-150 flex-shrink-0; }
         
-        .tg-input { @apply w-full bg-tg-500/80 border border-tg-glass-border rounded-xl px-4 py-3 text-sm text-tg-text-1 placeholder:text-tg-text-3 outline-none transition-all duration-200 focus:border-tg-accent/60 focus:ring-2 focus:ring-tg-accent/15 focus:bg-tg-500; }
+        .glass-card {
+          @apply bg-tg-700/60 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .tg-input-wrapper {
+          @apply relative flex items-center bg-tg-900/70 border border-white/10 rounded-2xl transition-all duration-300 focus-within:border-tg-accent focus-within:ring-4 focus-within:ring-tg-accent/20 focus-within:bg-tg-900/90 focus-within:shadow-tg-glow-sm;
+        }
+
+        .tg-input { @apply w-full bg-transparent border-none rounded-2xl px-4 py-3.5 text-sm text-tg-text-1 placeholder:text-tg-text-3 outline-none transition-all duration-200; }
       }
 
       @layer utilities {

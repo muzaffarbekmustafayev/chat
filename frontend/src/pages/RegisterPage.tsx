@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5'
 import { HiArrowRight } from 'react-icons/hi2'
+import { BsPersonFill, BsAt, BsTelephoneFill, BsLockFill, BsEyeFill, BsEyeSlashFill } from 'react-icons/bs'
 import toast from 'react-hot-toast'
 import { api } from '../api/axios'
 import { setAuth } from '../store/authSlice'
@@ -20,6 +21,7 @@ const RegisterPage = () => {
     lastName: '',
     password: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,17 +58,17 @@ const RegisterPage = () => {
   if (authLoading) return null
 
   return (
-    <div className="h-full w-full flex items-center justify-center p-4 overflow-y-auto">
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-tg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-tg-accent-light/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="h-full w-full flex items-center justify-center p-4 relative overflow-y-auto bg-tg-900">
+      <div className="absolute top-1/4 right-1/3 w-[450px] h-[450px] bg-tg-accent/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-md glass-card p-8 relative z-10 animate-modal my-auto">
+      <div className="w-full max-w-md glass-card p-6 sm:p-8 relative z-10 animate-fade-in border border-white/10 shadow-2xl my-auto">
         <div className="flex flex-col items-center mb-6">
           <div className="w-14 h-14 rounded-2xl bg-accent-gradient shadow-tg-glow flex items-center justify-center mb-3">
-            <IoChatbubbleEllipsesOutline size={30} className="text-white" />
+            <IoChatbubbleEllipsesOutline size={30} className="text-white drop-shadow" />
           </div>
-          <h1 className="text-xl font-bold text-tg-text-1 mb-1">Ro'yxatdan o'tish</h1>
-          <p className="text-xs text-tg-text-3">Yangi hisob yarating</p>
+          <h1 className="text-xl font-extrabold text-tg-text-1 tracking-tight mb-1">Ro'yxatdan o'tish</h1>
+          <p className="text-xs text-tg-text-3 font-medium">Yangi hisob yaratish uchun formani to'ldiring</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-3.5">
@@ -75,29 +77,36 @@ const RegisterPage = () => {
               <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
                 Ism <span className="text-red-400">*</span>
               </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="Ali"
-                className="tg-input py-2.5"
-                disabled={loading}
-              />
+              <div className="tg-input-wrapper group">
+                <div className="pl-3.5 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                  <BsPersonFill size={15} />
+                </div>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="Ali"
+                  className="tg-input py-2.5 pl-2.5"
+                  disabled={loading}
+                />
+              </div>
             </div>
             <div>
               <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
                 Familiya
               </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Valiyev"
-                className="tg-input py-2.5"
-                disabled={loading}
-              />
+              <div className="tg-input-wrapper group">
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Valiyev"
+                  className="tg-input py-2.5"
+                  disabled={loading}
+                />
+              </div>
             </div>
           </div>
 
@@ -105,51 +114,73 @@ const RegisterPage = () => {
             <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
               Username <span className="text-red-400">*</span>
             </label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="alivaliyev"
-              className="tg-input py-2.5"
-              disabled={loading}
-            />
+            <div className="tg-input-wrapper group">
+              <div className="pl-3.5 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                <BsAt size={17} />
+              </div>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="alivaliyev"
+                className="tg-input py-2.5 pl-2.5"
+                disabled={loading}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
               Telefon raqam <span className="text-red-400">*</span>
             </label>
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+998 90 123 45 67"
-              className="tg-input py-2.5"
-              disabled={loading}
-            />
+            <div className="tg-input-wrapper group">
+              <div className="pl-3.5 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                <BsTelephoneFill size={15} />
+              </div>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+998 90 123 45 67"
+                className="tg-input py-2.5 pl-2.5"
+                disabled={loading}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-tg-text-2 mb-1.5 ml-1">
               Parol <span className="text-red-400">*</span>
             </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="tg-input py-2.5"
-              disabled={loading}
-            />
+            <div className="tg-input-wrapper group">
+              <div className="pl-3.5 text-tg-text-3 group-focus-within:text-tg-accent transition-colors">
+                <BsLockFill size={16} />
+              </div>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="tg-input py-2.5 pl-2.5 pr-10"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 text-tg-text-3 hover:text-tg-text-1 transition-colors"
+              >
+                {showPassword ? <BsEyeSlashFill size={16} /> : <BsEyeFill size={16} />}
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary flex items-center justify-center gap-2 mt-4 py-2.5"
+            className="w-full btn-primary py-3 mt-4 flex items-center justify-center gap-2 text-sm font-semibold rounded-2xl shadow-tg-glow hover:shadow-tg-glow-sm transition-all duration-200"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -161,10 +192,10 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <div className="mt-5 text-center">
+        <div className="mt-6 text-center pt-3 border-t border-white/5">
           <p className="text-xs text-tg-text-3">
             Allaqachon hisobingiz bormi?{' '}
-            <Link to="/login" className="text-tg-accent hover:text-tg-accent-light font-medium transition-colors">
+            <Link to="/login" className="text-tg-accent hover:text-tg-accent-light font-semibold transition-colors">
               Tizimga kirish
             </Link>
           </p>
