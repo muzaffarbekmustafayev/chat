@@ -37,8 +37,11 @@ const ChatList: React.FC<Props> = ({ chats, loading, currentUser, onSelect }) =>
 
   if (chats.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-tg-text-3 text-sm italic">
-        Suhbatlar topilmadi
+      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <div className="bg-tg-600/30 border border-white/5 px-4 py-1.5 rounded-full mb-3 shadow-inner">
+          <span className="text-sm font-medium text-tg-text-3">Suhbatlar topilmadi</span>
+        </div>
+        <p className="text-xs text-tg-text-4">Yangi chat ochish uchun qalamchani bosing</p>
       </div>
     )
   }

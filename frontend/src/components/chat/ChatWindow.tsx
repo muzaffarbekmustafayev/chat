@@ -52,13 +52,21 @@ const ChatWindow: React.FC<Props> = ({ onBack }) => {
   }
 
   return (
-    <div className={`
-      flex-1 flex flex-col bg-tg-800 relative
-      transition-all duration-300
-    `}>
-      <ChatHeader chat={activeChat} onBack={onBack} />
-      <MessageList chat={activeChat} />
-      <MessageInput chat={activeChat} />
+    <div className="flex-1 flex flex-col relative transition-all duration-300 bg-tg-800 overflow-hidden">
+      {/* Background Pattern */}
+      <div 
+        className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none" 
+        style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")', backgroundRepeat: 'repeat' }} 
+      />
+      
+      {/* Gradient Overlay for extra premium feel */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-tg-900/40 to-transparent pointer-events-none" />
+
+      <div className="flex-1 flex flex-col z-10 relative">
+        <ChatHeader chat={activeChat} onBack={onBack} />
+        <MessageList chat={activeChat} />
+        <MessageInput chat={activeChat} />
+      </div>
     </div>
   )
 }
