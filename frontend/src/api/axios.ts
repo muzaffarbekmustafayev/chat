@@ -1,12 +1,13 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { store } from '../store'
-import { logout } from '../store/authSlice'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   withCredentials: true,
 })
+
+let store: any;
+export const injectStore = (_store: any) => { store = _store }
 
 let isRefreshing = false
 let failedQueue: any[] = []
@@ -60,7 +61,7 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (err) {
         processQueue(err, null)
-        store.dispatch(logout())
+        if (store) store.dispatch({ type: 'auth/logout' })
         return Promise.reject(err)
       } finally {
         isRefreshing = false
