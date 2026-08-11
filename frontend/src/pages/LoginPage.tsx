@@ -14,10 +14,23 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const { loading: authLoading } = useSelector((state: RootState) => state.auth)
 
-  const [phone, setPhone] = useState('+998')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, '')
+    let body = digits.startsWith('998') ? digits.slice(3) : digits
+    body = body.slice(0, 9)
+
+    let res = '+998'
+    if (body.length > 0) res += ' ' + body.slice(0, 2)
+    if (body.length > 2) res += ' ' + body.slice(2, 5)
+    if (body.length > 5) res += ' ' + body.slice(5, 7)
+    if (body.length > 7) res += ' ' + body.slice(7, 9)
+
+    return res
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(formatPhone(e.target.value))
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,9 +84,9 @@ const LoginPage = () => {
               <input
                 type="text"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
                 placeholder="+998 90 123 45 67"
-                className="tg-input"
+                className="tg-input font-medium tracking-wide"
                 disabled={loading}
               />
             </div>

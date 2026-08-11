@@ -24,8 +24,27 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, '')
+    let body = digits.startsWith('998') ? digits.slice(3) : digits
+    body = body.slice(0, 9)
+
+    let res = '+998'
+    if (body.length > 0) res += ' ' + body.slice(0, 2)
+    if (body.length > 2) res += ' ' + body.slice(2, 5)
+    if (body.length > 5) res += ' ' + body.slice(5, 7)
+    if (body.length > 7) res += ' ' + body.slice(7, 9)
+
+    return res
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    if (name === 'phone') {
+      setFormData(prev => ({ ...prev, phone: formatPhone(value) }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleRegister = async (e: React.FormEvent) => {
