@@ -22,24 +22,39 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   // Group tab states
   const [groupName, setGroupName] = useState('')
+  const [groupLink, setGroupLink] = useState('')
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
   const [creatingGroup, setCreatingGroup] = useState(false)
 
   // Channel tab states
   const [channelName, setChannelName] = useState('')
+  const [channelLink, setChannelLink] = useState('')
   const [channelDescription, setChannelDescription] = useState('')
   const [isPublicChannel, setIsPublicChannel] = useState(true)
   const [creatingChannel, setCreatingChannel] = useState(false)
+
+  // Unified search results
+  const [searchResults, setSearchResults] = useState<any[]>([])
 
   useEffect(() => {
     if (!isOpen) return
     const searchUsers = async () => {
       setLoading(true)
       try {
-        const res = await api.get(`/users/search?query=${encodeURIComponent(search)}`)
-        if (res.data.success) {
-          setUsers(res.data.data)
+        const query = encodeURIComponent(search)
+        const [usersRes, chatsRes] = await Promise.all([
+          api.get(`/users/search?query=${query}`),
+          api.get(`/chats/search/public?query=${query}`)
+        ])
+        
+        const combined = []
+        if (usersRes.data.success) {
+          combined.push(...usersRes.data.data.map((u: any) => ({ ...u, _type: 'user' })))
         }
+        if (chatsRes.data.success) {
+          combined.push(...chatsRes.data.data.map((c: any) => ({ ...c, _type: 'chat' })))
+        }
+        setSearchResults(combined)
       } catch (err) {
         console.error(err)
       } finally {
@@ -77,6 +92,7 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
       setCreatingGroup(true)
       const res = await api.post('/chats/group', {
         name: groupName.trim(),
+        link: groupLink.trim(),
         participantIds: selectedUserIds
       })
       if (res.data.success) {
@@ -101,6 +117,7 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
       setCreatingChannel(true)
       const res = await api.post('/chats/channel', {
         name: channelName.trim(),
+        link: channelLink.trim(),
         description: channelDescription.trim(),
         isPublic: isPublicChannel,
         participantIds: selectedUserIds // Optional for channels
@@ -172,16 +189,30 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
         {/* Content */}
         <div className="p-6 pt-2 flex-1 overflow-y-auto space-y-5 relative z-10">
           {tab === 'group' && (
-            <div>
-              <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Guruh nomi</label>
-              <div className="tg-input-wrapper group">
-                <input
-                  type="text"
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                  placeholder="Masalan: Dasturchilar guruhi"
-                  className="tg-input py-3"
-                />
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Guruh nomi</label>
+                <div className="tg-input-wrapper group">
+                  <input
+                    type="text"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    placeholder="Masalan: Dasturchilar guruhi"
+                    className="tg-input py-3"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Guruh havolasi (Link) - <span className="text-tg-text-3 font-normal">ixtiyoriy</span></label>
+                <div className="tg-input-wrapper group">
+                  <input
+                    type="text"
+                    value={groupLink}
+                    onChange={(e) => setGroupLink(e.target.value)}
+                    placeholder="@dasturchilar"
+                    className="tg-input py-3"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -222,6 +253,21 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </button>
               </div>
 
+              {isPublicChannel && (
+                <div>
+                  <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Kanal havolasi (Link)</label>
+                  <div className="tg-input-wrapper group">
+                    <input
+                      type="text"
+                      value={channelLink}
+                      onChange={(e) => setChannelLink(e.target.value)}
+                      placeholder="@yangiliklar"
+                      className="tg-input py-3"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs font-medium text-tg-text-2 mb-2 ml-1">Kanal haqida (ixtiyoriy)</label>
                 <div className="tg-input-wrapper group h-auto">
@@ -258,35 +304,51 @@ const NewChatModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <span className="w-4 h-4 border-2 border-tg-accent/30 border-t-tg-accent rounded-full animate-spin" />
                 Qidirilmoqda...
               </div>
-            ) : users.length === 0 ? (
+            ) : searchResults.length === 0 ? (
               <div className="text-center py-8 text-tg-text-3 text-sm bg-white/5 rounded-2xl border border-white/5">
-                Foydalanuvchilar topilmadi
+                Natija topilmadi
               </div>
             ) : (
-              users.map((u) => {
-                const isSelected = selectedUserIds.includes(u._id)
+              searchResults.map((item) => {
+                const isSelected = selectedUserIds.includes(item._id)
+                const isUser = item._type === 'user'
+                const displayName = isUser ? `${item.firstName} ${item.lastName || ''}`.trim() : item.name
+                const displayUsername = isUser ? item.username : item.link
+
                 return (
                   <div
-                    key={u._id}
-                    onClick={() => tab === 'private' ? handleStartPrivateChat(u._id) : toggleSelectUser(u._id)}
+                    key={item._id}
+                    onClick={() => {
+                      if (isUser && tab === 'private') {
+                        handleStartPrivateChat(item._id)
+                      } else if (isUser && tab !== 'private') {
+                        toggleSelectUser(item._id)
+                      } else if (!isUser) {
+                        // TODO: Open chat/group
+                        toast.error("Guruh/kanalga kirish hozircha tayyor emas")
+                      }
+                    }}
                     className={`flex items-center gap-4 p-3 rounded-2xl cursor-pointer transition-all duration-200 border ${
                       isSelected ? 'bg-tg-accent/10 border-tg-accent/40 shadow-tg-glow-sm' : 'border-transparent hover:bg-white/5 hover:border-white/10'
                     }`}
                   >
                     <div className="avatar-wrapper flex-shrink-0 relative">
-                      {u.avatar ? (
-                        <img src={u.avatar} className="avatar-base avatar-md" alt="" />
+                      {item.avatar ? (
+                        <img src={item.avatar} className="avatar-base avatar-md" alt="" />
                       ) : (
-                        <div className="avatar-base avatar-md avatar-placeholder">
-                          {u.firstName[0]}
+                        <div className={`avatar-base avatar-md avatar-placeholder ${!isUser && 'bg-blue-600'}`}>
+                          {displayName[0]}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-tg-text-1 truncate">{u.firstName} {u.lastName}</p>
-                      <p className="text-xs text-tg-text-3 truncate">@{u.username}</p>
+                      <p className="text-sm font-semibold text-tg-text-1 truncate flex items-center gap-2">
+                        {displayName}
+                        {!isUser && <span className="text-[10px] px-1.5 py-0.5 rounded bg-tg-600/50 text-tg-text-3 uppercase tracking-wider">{item.type}</span>}
+                      </p>
+                      {displayUsername && <p className="text-xs text-tg-text-3 truncate">@{displayUsername}</p>}
                     </div>
-                    {tab !== 'private' && (
+                    {isUser && tab !== 'private' && (
                       <input
                         type="checkbox"
                         checked={isSelected}

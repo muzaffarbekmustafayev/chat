@@ -5,6 +5,7 @@ const ChatSchema = new Schema<IChat>(
   {
     type:        { type: String, enum: ['private', 'group', 'channel'], required: true },
     name:        { type: String, default: null, maxlength: 128 },
+    link:        { type: String, default: null, sparse: true, unique: true, maxlength: 64, trim: true },
     description: { type: String, default: '', maxlength: 512 },
     isPublic:    { type: Boolean, default: false },
     avatar:      { type: String, default: null },

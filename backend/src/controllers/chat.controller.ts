@@ -49,16 +49,25 @@ export const createPrivateChat = catchAsync(async (req: Request, res: Response) 
 
 // POST /api/chats/group
 export const createGroupChat = catchAsync(async (req: Request, res: Response) => {
-  const { name, participantIds } = req.body
+  const { name, participantIds, link } = req.body
   if (!name) throw new AppError("Guruh nomi talab qilinadi", 400)
   if (!Array.isArray(participantIds) || participantIds.length < 1)
     throw new AppError("Kamida 1 ta a'zo kerak", 400)
+
+  // Ensure link doesn't contain '@' prefix in the database
+  const cleanLink = link?.startsWith('@') ? link.substring(1).trim() : link?.trim()
+
+  if (cleanLink) {
+    const exists = await Chat.findOne({ link: cleanLink })
+    if (exists) throw new AppError("Ushbu link (havola) allaqachon band", 409)
+  }
 
   const allParticipants = [...new Set([req.user._id.toString(), ...participantIds])]
 
   const chat = await Chat.create({
     type: 'group',
     name,
+    link: cleanLink || null,
     participants: allParticipants,
     admins: [req.user._id],
     owner: req.user._id,
@@ -70,15 +79,23 @@ export const createGroupChat = catchAsync(async (req: Request, res: Response) =>
 
 // POST /api/chats/channel
 export const createChannelChat = catchAsync(async (req: Request, res: Response) => {
-  const { name, description, participantIds, isPublic } = req.body
+  const { name, description, participantIds, isPublic, link } = req.body
   if (!name) throw new AppError("Kanal nomi talab qilinadi", 400)
   
+  const cleanLink = link?.startsWith('@') ? link.substring(1).trim() : link?.trim()
+
+  if (cleanLink) {
+    const exists = await Chat.findOne({ link: cleanLink })
+    if (exists) throw new AppError("Ushbu link (havola) allaqachon band", 409)
+  }
+
   // For channels, adding initial participants is optional
   const allParticipants = [...new Set([req.user._id.toString(), ...(Array.isArray(participantIds) ? participantIds : [])])]
 
   const chat = await Chat.create({
     type: 'channel',
     name,
+    link: cleanLink || null,
     description: description || '',
     isPublic: !!isPublic,
     participants: allParticipants,
@@ -127,4 +144,24 @@ export const muteChat = catchAsync(async (req: Request, res: Response) => {
   }
 
   res.json({ success: true, data: { muted: !isMuted } })
+})
+
+// GET /api/chats/search/public
+export const searchPublicChats = catchAsync(async (req: Request, res: Response) => {
+  const q = ((req.query.q || req.query.query) as string || '').trim()
+  
+  if (!q) {
+    return res.json({ success: true, data: [] })
+  }
+
+  const cleanQ = q.startsWith('@') ? q.substring(1) : q
+
+  const chats = await Chat.find({
+    $or: [
+      { link: { $regex: cleanQ, $options: 'i' } },
+      { name: { $regex: q, $options: 'i' }, isPublic: true },
+    ]
+  }).select('name link type avatar isPublic description participants').limit(20)
+
+  res.json({ success: true, data: chats })
 })

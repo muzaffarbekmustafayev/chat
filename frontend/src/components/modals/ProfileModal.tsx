@@ -16,6 +16,7 @@ const ProfileModal: React.FC<Props> = ({ user, isOpen, onClose }) => {
   const dispatch = useDispatch<any>()
   const [firstName, setFirstName] = useState(user?.firstName || '')
   const [lastName, setLastName] = useState(user?.lastName || '')
+  const [username, setUsername] = useState(user?.username || '')
   const [bio, setBio] = useState(user?.bio || '')
   const [loading, setLoading] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -25,10 +26,11 @@ const ProfileModal: React.FC<Props> = ({ user, isOpen, onClose }) => {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!firstName.trim()) return toast.error("Ismingizni kiriting")
+    if (!username.trim()) return toast.error("Username kiriting")
 
     try {
       setLoading(true)
-      const res = await api.put('/users/profile', { firstName, lastName, bio })
+      const res = await api.put('/users/profile', { firstName, lastName, bio, username })
       if (res.data.success) {
         toast.success("Profil yangilandi")
         dispatch(fetchMe())
@@ -97,6 +99,20 @@ const ProfileModal: React.FC<Props> = ({ user, isOpen, onClose }) => {
               </label>
             </div>
             <p className="text-xs text-tg-text-3 mt-2">Rasm almashtirish uchun bosing</p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-tg-text-2 mb-1">Username</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-tg-text-3">@</span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value.replace('@', ''))}
+                className="tg-input py-2.5 pl-7"
+                placeholder="username"
+              />
+            </div>
           </div>
 
           <div>

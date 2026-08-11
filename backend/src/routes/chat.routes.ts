@@ -1,11 +1,12 @@
 import { Router } from 'express'
-import { getChats, createPrivateChat, createGroupChat, createChannelChat, getChatById, deleteChat, muteChat } from '../controllers/chat.controller'
+import { getChats, createPrivateChat, createGroupChat, createChannelChat, searchPublicChats, getChatById, deleteChat, muteChat } from '../controllers/chat.controller'
 import { protect } from '../middlewares/auth.middleware'
 
 const router = Router()
 router.use(protect)
 
 router.get('/', getChats)
+router.get('/search/public', searchPublicChats)
 router.post('/private', createPrivateChat)
 router.post('/group', createGroupChat)
 router.post('/channel', createChannelChat)
