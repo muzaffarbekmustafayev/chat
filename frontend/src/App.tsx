@@ -13,12 +13,21 @@ import ChatPage from './pages/ChatPage'
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth)
+  const { mode } = useSelector((state: RootState) => state.theme)
 
   useEffect(() => {
     if (localStorage.getItem('accessToken')) {
       dispatch(fetchMe())
     }
   }, [dispatch])
+
+  useEffect(() => {
+    if (mode === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [mode])
 
   if (loading) return <div className="h-full flex items-center justify-center">Yuklanmoqda...</div>
 

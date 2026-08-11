@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { HiMiniPencilSquare } from 'react-icons/hi2'
-import { BsThreeDotsVertical } from 'react-icons/bs'
+import { BsThreeDotsVertical, BsSunFill, BsMoonFill } from 'react-icons/bs'
 import { User } from '../../types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../store/authSlice'
+import { toggleTheme } from '../../store/themeSlice'
+import { RootState } from '../../store'
 import NewChatModal from '../modals/NewChatModal'
 import ProfileModal from '../modals/ProfileModal'
 
 const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
   const dispatch = useDispatch()
+  const { mode } = useSelector((state: RootState) => state.theme)
   const [isNewChatOpen, setIsNewChatOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
 
@@ -45,6 +48,13 @@ const SidebarHeader: React.FC<{ user: User | null }> = ({ user }) => {
 
         {/* Amallar */}
         <div className="flex items-center gap-0.5 flex-shrink-0">
+          <button 
+            onClick={() => dispatch(toggleTheme())} 
+            className="btn-icon-circle text-tg-accent hover:text-tg-accent-light" 
+            title={mode === 'dark' ? "Kunduzgi rejim" : "Tungi rejim"}
+          >
+            {mode === 'dark' ? <BsSunFill size={16} /> : <BsMoonFill size={16} />}
+          </button>
           <button onClick={() => setIsNewChatOpen(true)} className="btn-icon-circle" title="Yangi suhbat">
             <HiMiniPencilSquare size={18} />
           </button>
